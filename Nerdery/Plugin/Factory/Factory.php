@@ -117,7 +117,7 @@ class Factory
          *
          * This service is a dependency to the Gateway service below.
          */
-        $plugin[Plugin::CONTAINER_KEY_DATA_HYDRATOR] = $plugin->factory(function($c) {
+        $plugin[Plugin::CONTAINER_KEY_DATA_HYDRATOR] = $plugin->factory(function ($c) {
             return new Hydrator();
         });
 
@@ -127,7 +127,7 @@ class Factory
          * plugin is going to use another DBAL/ORM such as Propel or Doctrine2,
          * you can
          */
-        $plugin[Plugin::CONTAINER_KEY_GATEWAY] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_GATEWAY] = function ($c) {
             /** @var Proxy $proxy */
             $proxy = $c[Plugin::CONTAINER_KEY_WP_PROXY];
             $wpdb = $proxy->getDatabase();
@@ -137,7 +137,7 @@ class Factory
             );
         };
 
-        $plugin[Plugin::CONTAINER_KEY_DB] = $plugin->factory(function($c) {
+        $plugin[Plugin::CONTAINER_KEY_DB] = $plugin->factory(function ($c) {
             return new DataManager(
                 $c[Plugin::CONTAINER_KEY_GATEWAY],
                 $c[Plugin::CONTAINER_KEY_DATA_HYDRATOR]
@@ -167,7 +167,7 @@ class Factory
          * provides us with an adapter to the WordPress core (global)
          * functionality that is required to interact with the Plugin api.
          */
-        $plugin[Plugin::CONTAINER_KEY_WP_PROXY] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_WP_PROXY] = function ($c) {
             return new Proxy();
         };
 
@@ -185,11 +185,11 @@ class Factory
          * factory class, which in every case, should be the WordPress
          * plugin bootstrap file.
          */
-        $plugin[Plugin::CONTAINER_KEY_PLUGIN_FILE] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_PLUGIN_FILE] = function ($c) {
             return $this->pluginFile;
         };
 
-        $plugin[Plugin::CONTAINER_KEY_PLUGIN_WP_NAME] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_PLUGIN_WP_NAME] = function ($c) {
             /** @var Proxy $proxy */
             $proxy = $c[Plugin::CONTAINER_KEY_WP_PROXY];
             $pluginBasename = $proxy->pluginBasename($c[Plugin::CONTAINER_KEY_PLUGIN_FILE]);
@@ -197,7 +197,7 @@ class Factory
             return $pluginBasename;
         };
 
-        $plugin[Plugin::CONTAINER_KEY_PLUGIN_URL] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_PLUGIN_URL] = function ($c) {
             /** @var Proxy $proxy */
             $proxy = $c[Plugin::CONTAINER_KEY_WP_PROXY];
             $pluginFolder = dirname($c[Plugin::CONTAINER_KEY_PLUGIN_WP_NAME]);
@@ -214,7 +214,7 @@ class Factory
          * which allows this library to function with an already initialized
          * PHP session which it is not, by default, compatible with.
          */
-        $plugin[Plugin::CONTAINER_KEY_SESSION] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_SESSION] = function ($c) {
             return new Session(new PhpBridgeSessionStorage());
         };
 
@@ -225,7 +225,7 @@ class Factory
          * information. This protects us from inconsistencies in HTTP server
          * request header configurations.
          */
-        $plugin[Plugin::CONTAINER_KEY_REQUEST] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_REQUEST] = function ($c) {
             return Request::createFromGlobals();
         };
 
@@ -235,7 +235,7 @@ class Factory
          * registering public URL paths and mapping handlers to those
          * url rewrites.
          */
-        $plugin[Plugin::CONTAINER_KEY_ROUTER] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_ROUTER] = function ($c) {
             return new Router($c);
         };
 
@@ -244,12 +244,12 @@ class Factory
          * the view template loader path(s).
          */
         $plugin[Plugin::CONTAINER_KEY_TWIG_PATH] = $this->configuration[self::CONFIG_KEY_TEMPLATE];
-        $plugin[Plugin::CONTAINER_KEY_TWIG_LOADER] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_TWIG_LOADER] = function ($c) {
             return new \Twig_Loader_Filesystem(
                 $c[Plugin::CONTAINER_KEY_TWIG_PATH]
             );
         };
-        $plugin[Plugin::CONTAINER_KEY_TWIG] = function($c) {
+        $plugin[Plugin::CONTAINER_KEY_TWIG] = function ($c) {
             return new \Twig_Environment(
                 $c[Plugin::CONTAINER_KEY_TWIG_LOADER],
                 array()

@@ -7,7 +7,7 @@
 
 namespace Nerdery\Plugin;
 
-use Nerdery\Plugin\WordPress\Proxy;
+use Nerdery\WordPress\Proxy;
 use Nerdery\Plugin\Router\Route;
 use Nerdery\Plugin\Router\Router;
 use Pimple;

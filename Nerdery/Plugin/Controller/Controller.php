@@ -38,7 +38,7 @@ abstract class Controller implements ControllerInterface
 
         $proxy = $this->getProxy();
 
-        $proxy->addAction("{$slug}_initialize", function() use ($controller) {
+        $proxy->addAction("{$slug}_initialize", function () use ($controller) {
             $controller->connect();
         });
 
@@ -46,11 +46,11 @@ abstract class Controller implements ControllerInterface
          * Subscribe to the activation/deactivation hooks.
          * These must be here and *not* in the
          */
-        $proxy->addAction("{$slug}_activation", function() use($controller) {
+        $proxy->addAction("{$slug}_activation", function () use($controller) {
             $controller->activate();
         });
 
-        $proxy->addAction("{$slug}_deactivation", function() use ($controller) {
+        $proxy->addAction("{$slug}_deactivation", function () use ($controller) {
             $controller->deactivate();
         });
     }
@@ -83,11 +83,11 @@ abstract class Controller implements ControllerInterface
             );
         }
 
-        $proxy->addAction("{$slug}_admin_menu", function() use($controller) {
+        $proxy->addAction("{$slug}_admin_menu", function () use ($controller) {
             $controller->registerAdminRoutes();
         });
 
-        $proxy->addAction('admin_init', function() use($controller) {
+        $proxy->addAction('admin_init', function () use ($controller) {
             $controller->initializeAdmin();
         });
 

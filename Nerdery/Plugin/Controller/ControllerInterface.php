@@ -14,7 +14,7 @@ use Nerdery\Plugin;
  *
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-interface ControllerInterface 
+interface ControllerInterface
 {
     /**
      * Initialize
@@ -75,4 +75,4 @@ interface ControllerInterface
      * Render a view
      */
     public function render($name, array $data);
-} 
+}

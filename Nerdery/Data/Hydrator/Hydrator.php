@@ -96,7 +96,8 @@ class Hydrator
         $properties = $reflectedEntity->getProperties(\ReflectionProperty::IS_PRIVATE);
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            $dataArray[$propertyName] = $this->getProperty($entity, $property, $propertyName);
+            $propertyValue = $this->getProperty($entity, $property, $propertyName);
+            $dataArray[$propertyName] = $propertyValue;
         }
 
         return $dataArray;

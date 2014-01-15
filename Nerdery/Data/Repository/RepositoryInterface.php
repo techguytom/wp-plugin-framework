@@ -13,7 +13,7 @@ namespace Nerdery\Data\Repository;
  * @package Nerdery\Plugin\Data\Repository
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-interface RepositoryInterface 
+interface RepositoryInterface
 {
     /**
      * Get the source for this repository.

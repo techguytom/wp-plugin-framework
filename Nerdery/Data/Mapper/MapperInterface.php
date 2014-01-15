@@ -13,7 +13,7 @@ namespace Nerdery\Data\Mapper;
  * @package ClogCulprits\Data\Mapper
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-interface MapperInterface 
+interface MapperInterface
 {
     public function getColumnToPropertyMap();
 
@@ -26,4 +26,4 @@ interface MapperInterface
     public function mapArrayColumnToProperty(array $sourceArray);
 
     public function mapArrayPropertyToColumn(array $sourceArray);
-} 
+}

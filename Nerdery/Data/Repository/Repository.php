@@ -7,8 +7,8 @@
 
 namespace Nerdery\Data\Repository;
 
+use Nerdery\Data\Entity\EntityInterface;
 use Nerdery\Data\Manager\DataManager;
-use Nerdery\Data\Entity\Entity;
 use Nerdery\Data\Hydrator\Hydrator;
 use Nerdery\Data\Mapper\MapperInterface;
 use Nerdery\WordPress\Gateway;
@@ -29,6 +29,7 @@ abstract class Repository implements RepositoryInterface
      */
     const ERROR_SOURCE_NOT_SET = 'A valid data source must be defined using self::source()';
     const ERROR_ENTITY_NOT_OBJECT = 'Repository requires entity parameter to be an object.';
+    const SQL_DATE_STAMP = 'Y-m-d H:i:s';
 
     /**
      * @var string
@@ -195,32 +196,41 @@ abstract class Repository implements RepositoryInterface
     /**
      * Persist an entity
      *
-     * @param string $tableName
-     * @param Entity $entity
+     * @param EntityInterface $entity
      *
      * @throws \Exception
      * @return false|int
      */
-    public function _persist($tableName, Entity $entity)
+    public function persist(EntityInterface $entity)
     {
         if (false === $entity->isValid()) {
             $errors = implode('\r\n', $entity->getErrors());
             throw new Exception($errors);
         }
 
-        $dataArray = $this->getHydrator()->dehydrate($entity);
-        $dataArray = $this->getMapper()->mapArrayPropertyToColumn($dataArray);
+        $mapper = $this->getMapper();
+        $hydrator = $this->getHydrator();
+        $dataArray = $hydrator->dehydrate($entity);
+        $dataArray = $mapper->mapArrayPropertyToColumn($dataArray);
+        $tableName = $this->getSource();
 
-        $primaryKeyName = $entity->getIndexPropertyName();
+        $primaryKeyName = $mapper->getPrimaryKeyPropertyName();
+        $primaryKeyGetter = 'get' . ucfirst($primaryKeyName);
 
-        if (null !== $entity->getIndex()) {
-            return $this->update(
+        if (null !== $entity->$primaryKeyGetter()) {
+            $result = $this->update(
                 $tableName,
                 $dataArray,
                 array(
                     $primaryKeyName => $dataArray[$primaryKeyName]
                 )
             );
+
+            if (!$result) {
+                return $result;
+            }
+
+            return $entity;
         }
 
         /*
@@ -234,7 +244,22 @@ abstract class Repository implements RepositoryInterface
             unset($dataArray[$primaryKeyName]);
         }
 
-        return $this->insert($tableName, $dataArray);
+        $gateway = $this->getGateway();
+        $repository = $this;
+        $result = $gateway->transaction(function () use ($repository, $tableName, $dataArray) {
+            $result = $this->insert($tableName, $dataArray);
+            $id = $this->getGateway()->getWpDbal()->insert_id;
+            $returnArray = array(
+                'result' => $result,
+                'id' => $id,
+            );
+
+            return $returnArray;
+        });
+
+        $entity->setId($result['id']);
+
+        return $result['result'];
     }
 
     /**

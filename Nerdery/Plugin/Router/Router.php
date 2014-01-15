@@ -9,6 +9,8 @@ namespace Nerdery\Plugin\Router;
 
 use Nerdery\Plugin\Router\Route;
 use Nerdery\Plugin\Plugin;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Router
@@ -74,15 +76,15 @@ class Router
         $container = $this->getContainer();
         $wordPressProxy = $container->getProxy();
 
-        $wordPressProxy->addAction('init', function() use($router) {
+        $wordPressProxy->addAction('init', function () use ($router) {
             $router->registerEndpoints();
         }, 0);
 
-        $wordPressProxy->addAction('parse_request', function() use($router) {
-           $router->inspectRequests();
+        $wordPressProxy->addAction('parse_request', function () use ($router) {
+            $router->inspectRequests();
         }, 0);
 
-        $wordPressProxy->addFilter('query_vars', function($vars) use($router) {
+        $wordPressProxy->addFilter('query_vars', function ($vars) use ($router) {
             return $router->addQueryVars($vars);
         });
 
@@ -163,7 +165,8 @@ class Router
         $controllerName = $route->getControllerName();
         $actionName = $route->getActionName();
 
-        $toUrl = sprintf('index.php?%s=%s&%s=%s',
+        $toUrl = sprintf(
+            'index.php?%s=%s&%s=%s',
             self::QUERY_PARAM_PLUGIN,
             $slug,
             self::QUERY_PARAM_ACTION,
@@ -186,8 +189,17 @@ class Router
             );
         }
 
-        $proxy->addAction($hookName, function() use ($controller, $actionName) {
-            $controller->$actionName();
+        $proxy->addAction($hookName, function () use ($container, $controller, $actionName) {
+            $request = $container->getRequest();
+            $response = $controller->$actionName($request, new Response());
+
+            if ($response instanceof Response) {
+                $response->send();
+            } else {
+                echo $response;
+            }
+
+            exit;
         });
     }
 
@@ -293,4 +305,4 @@ class Router
         $vars[] = self::QUERY_PARAM_PLUGIN;
         return $vars;
     }
-} 
+}

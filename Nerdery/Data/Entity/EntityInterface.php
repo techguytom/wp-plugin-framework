@@ -1,6 +1,6 @@
 <?php
 /**
- * File Indexable.php
+ * File EntityInterface.php
  * 
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
@@ -8,14 +8,12 @@
 namespace Nerdery\Data\Entity;
 
 /**
- * Interface Indexable
+ * Interface EntityInterface
  *
- * @package Nerdery\Plugin\Data\Entity
+ * @package Nerdery\Data\Entity
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-interface Indexable
+interface EntityInterface extends Validatable, Indexable
 {
-    public function getId();
 
-    public function setId($index);
 }

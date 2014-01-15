@@ -13,7 +13,7 @@ namespace Nerdery\Data\Entity;
  * @package Nerdery\Plugin\Data\Entity
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-interface Validatable 
+interface Validatable
 {
     /**
      * isValid

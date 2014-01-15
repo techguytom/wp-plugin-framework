@@ -163,7 +163,7 @@ class Gateway
      * @param string $tableName
      * @param array $data
      *
-     * @return false|int
+     * @return false|int False on failure, ID of new row on insert
      */
     public function insert($tableName, array $data)
     {
@@ -204,6 +204,19 @@ class Gateway
     }
 
     /**
+     * getDbHandle
+     *
+     * @return resource
+     */
+    public function getDbHandle()
+    {
+        $wpdb = $this->getWpDbal();
+        $dbh = $wpdb->dbh;
+
+        return $dbh;
+    }
+
+    /**
      * fixNull
      * This is a hack to fix a quirk with the WordPress DBAL. If you
      * pass in a NULL value for a column it will cast the NULL to a
@@ -229,5 +242,35 @@ class Gateway
         }
 
         return $arguments;
+    }
+
+    /**
+     * Perform a database transaction
+     * This allows us to perform transactions on our database, it does
+     * however require that all tables be InnoDB (which may not be the case
+     * especially with older installations of WordPress). Use this
+     * method at your own risk.
+     * If any exceptions are thrown within the callable, the transaction
+     * will be rolled back, otherwise it will be committed.
+     *
+     * @param callable $callable
+     *
+     * @throws \Exception If transaction must be rolled back
+     * @return mixed Returns the result of the callable
+     */
+    public function transaction(callable $callable)
+    {
+        $dbh = $this->getDbHandle();
+        mysql_query('START TRANSACTION', $dbh);
+
+        try {
+            $result = $callable();
+            mysql_query('COMMIT', $dbh);
+        } catch(Exception $e) {
+            mysql_query('ROLLBACK', $dbh);
+            throw new Exception('A database error has occurred resulting in a rolled back transaction.');
+        }
+
+        return $result;
     }
 } 
