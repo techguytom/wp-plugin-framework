@@ -2,18 +2,9 @@
     "name": "nerdery/wp-plugin-framework",
     "description": "A modern object oriented WordPress plugin platform.",
     "homepage": "http://www.nerdery.com",
+    "keywords": ["wordpress", "plugin", "framework", "oo"],
     "version": "0.1.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/thenerdery/wp-plugin-framework.git"
-    },
     "license": "BSD-2",
-    "require": {
-        "php": ">=5.3.3",
-        "twig/twig": "1.*",
-        "pimple/pimple": "2.0.*@dev",
-        "symfony/http-foundation": "2.3.*@dev"
-    },
     "authors": [
         {
             "name": "Douglas Linsmeyer",
@@ -21,5 +12,21 @@
             "homepage": "http://www.nerdery.com",
             "role": "Developer"
         }
-    ]
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/thenerdery/wp-plugin-framework.git"
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "twig/twig": "1.*",
+        "pimple/pimple": "2.0.*@dev",
+        "symfony/http-foundation": "2.3.*@dev"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "Nerdery": "src/"
+        }
+    }
 }
