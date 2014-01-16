@@ -2,7 +2,47 @@
 
 A modern, object oriented framework for developing WordPress plugins
 
+### Example Directory Structure
+```
+|-- <project root>
+|   |-- content
+|   |   |-- plugins
+|   |   |   |-- your-plugin-name
+|   |   |   |   |-- resources
+|   |   |   |   |   |-- views <twig templates in here>
+|   |   |   |   |   |-- css
+|   |   |   |   |   |-- js
+|   |   |   |   |
+|   |   |   |   |-- src
+|   |   |   |   |   |-- YourPluginNamespace
+|   |   |   |   |   |   |-- Controller
+|   |   |   |   |   |   |   |-- ApiController.php
+|   |   |   |   |   |   |   |-- HomeController.php
+|   |   |   |   |
+|   |   |   |   |-- vendor <composer dependencies>
+|   |   |   |   |
+|   |   |   |   |-- composer.json
+|   |   |   |   |
+|   |   |   |   |-- your-plugin-name.php
+```
+
+### Installation with composer
+```json
+{
+    "require": {
+        "nerdery/wp-plugin-framework": "dev-master"
+    }
+}
+```
+
+### Your plugin file
+
 ```php
+
+/**
+ * File your-plugin-name.php
+ */
+
 /*
  * Create a new plugin factory
  * 
@@ -21,8 +61,8 @@ A modern, object oriented framework for developing WordPress plugins
  *   unique.
  */
 $factory = new \Nerdery\Plugin\Factory\Factory(array(
-    'templatePath' => 'path/to/your/twig/templates',
-    'prefix' => 'plugins_database_prefix',
+    'templatePath' => dirname(__FILE__) . '/resources/views',
+    'prefix' => 'plugins_database_prefix_',
     'slug' => 'this_plugins_slug_name',
 ));
 
