@@ -17,7 +17,7 @@
         "type": "git",
         "url": "https://github.com/thenerdery/wp-plugin-framework.git"
     },
-    "require-dev": {
+    "require": {
         "php": ">=5.3.2",
         "twig/twig": "~1.0",
         "symfony/http-foundation": "~2.3",
