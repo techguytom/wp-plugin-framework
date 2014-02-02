@@ -385,7 +385,7 @@ class Proxy
             $type = 'update';
         }
 
-        return $this->addAction('admin_notices', function() use ($message, $type) {
+        return $this->addAction('admin_notices', function () use ($message, $type) {
             echo '<div class="' . $type . '">' . $message . '</div>';
         });
     }
@@ -426,5 +426,15 @@ class Proxy
     public function pluginsUrl($file = null)
     {
         return plugins_url($file);
+    }
+
+    /**
+     * Checks if the current page is an administration page.
+     *
+     * @return boolean
+     */
+    public function isAdmin()
+    {
+        return is_admin();
     }
 }
