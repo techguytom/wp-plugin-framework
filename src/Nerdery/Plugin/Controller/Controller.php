@@ -58,10 +58,12 @@ abstract class Controller implements ControllerInterface
     /**
      * Connect the controller
      *
+     * Made this public so it could be called from closure (5.3 compatibility)
+     *
      * @throws \UnexpectedValueException
      * @return self
      */
-    private function connect()
+    public function connect()
     {
         /*
          * Alias $this to $controller so it can be used in the action callback

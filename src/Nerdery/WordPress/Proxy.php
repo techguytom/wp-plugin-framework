@@ -52,7 +52,7 @@ class Proxy
      *
      * @return bool|void
      */
-    public function addAction($actionName, callable $callback)
+    public function addAction($actionName, $callback)
     {
         return add_action($actionName, $callback);
     }
@@ -67,7 +67,7 @@ class Proxy
      *
      * @return bool|void
      */
-    public function addFilter($tag, callable $callable, $priority = 10, $acceptedArgs = 1)
+    public function addFilter($tag, $callable, $priority = 10, $acceptedArgs = 1)
     {
         return add_filter($tag, $callable, $priority, $acceptedArgs);
     }
@@ -223,7 +223,7 @@ class Proxy
      *
      * @return mixed
      */
-    public function registerSetting($groupName, $settingName, callable $validationCallback = null)
+    public function registerSetting($groupName, $settingName, $validationCallback = null)
     {
         return register_setting($groupName, $settingName, $validationCallback);
     }
@@ -238,7 +238,7 @@ class Proxy
      *
      * @return void
      */
-    public function addSettingsSection($sectionId, $sectionTitle, callable $callback = null, $adminPageSlug)
+    public function addSettingsSection($sectionId, $sectionTitle, $callback = null, $adminPageSlug)
     {
         add_settings_section($sectionId, $sectionTitle, $callback, $adminPageSlug);
     }
@@ -254,7 +254,7 @@ class Proxy
      *
      * @return void
      */
-    public function addSettingsField($settingId, $settingTitle, callable $callback, $adminPageSlug, $sectionId)
+    public function addSettingsField($settingId, $settingTitle, $callback, $adminPageSlug, $sectionId)
     {
         add_settings_field($settingId, $settingTitle, $callback, $adminPageSlug, $sectionId);
     }
@@ -312,7 +312,7 @@ class Proxy
      *
      * @return string
      */
-    public function buffer(callable $callable)
+    public function buffer($callable)
     {
         ob_start();
         $callable();
@@ -399,7 +399,7 @@ class Proxy
      *
      * @return bool|string
      */
-    public function registerAdminRoute($slug, $capability, callable $handler)
+    public function registerAdminRoute($slug, $capability, $handler)
     {
         return $this->addSubmenuPage(null, null, null, $capability, $slug, $handler);
     }

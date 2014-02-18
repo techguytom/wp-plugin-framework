@@ -76,7 +76,14 @@ class Factory
      */
     private function getPluginFilename()
     {
-        $backtrace = debug_backtrace(null, 2);
+
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            // Second parameter added in PHP 5.4.0
+            $backtrace  = debug_backtrace(null, 2);
+        } else {
+            $backtrace  = debug_backtrace(null);
+        }
+
         $file = $backtrace[1]['file'];
 
         return $file;
@@ -185,9 +192,7 @@ class Factory
          * factory class, which in every case, should be the WordPress
          * plugin bootstrap file.
          */
-        $plugin[Plugin::CONTAINER_KEY_PLUGIN_FILE] = function ($c) {
-            return $this->pluginFile;
-        };
+        $plugin[Plugin::CONTAINER_KEY_PLUGIN_FILE] = $this->pluginFile;
 
         $plugin[Plugin::CONTAINER_KEY_PLUGIN_WP_NAME] = function ($c) {
             /** @var Proxy $proxy */
