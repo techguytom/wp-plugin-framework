@@ -124,7 +124,7 @@ class Factory
          *
          * This service is a dependency to the Gateway service below.
          */
-        $plugin[Plugin::CONTAINER_KEY_DATA_HYDRATOR] = $plugin->factory(function ($c) {
+        $plugin[Plugin::CONTAINER_KEY_DATA_HYDRATOR] = $plugin->share(function ($c) {
             return new Hydrator();
         });
 
@@ -144,7 +144,7 @@ class Factory
             );
         };
 
-        $plugin[Plugin::CONTAINER_KEY_DB] = $plugin->factory(function ($c) {
+        $plugin[Plugin::CONTAINER_KEY_DB] = $plugin->share(function ($c) {
             return new DataManager(
                 $c[Plugin::CONTAINER_KEY_GATEWAY],
                 $c[Plugin::CONTAINER_KEY_DATA_HYDRATOR]
