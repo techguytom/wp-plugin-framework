@@ -1,0 +1,27 @@
+; QIS configuration file v1.0.11
+project_name=wp-plugin-framework
+project_root="/private/var/www/wp-plugin-framework"
+
+build_order=cs,test,coverage
+
+[modules]
+; Module to run codesniffs to check coding standards.
+codingstandard.command=cs
+codingstandard.class=Qis_Module_Codingstandard
+codingstandard.standard=PSR2
+codingstandard.path=.
+codingstandard.ignore=vendor
+
+; Module for code coverage of unit tests.
+coverage.command=coverage
+coverage.class=Qis_Module_Coverage
+coverage.root=.
+coverage.ignorePaths=vendor,SymfonyComponents,Interface,Indexable,Validatable
+
+; Run unit and integration tests for a project
+test.command=test
+test.class=Qis_Module_Test
+test.bootstrap=
+test.configuration=
+test.path=tests
+
