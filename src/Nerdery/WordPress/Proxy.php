@@ -12,7 +12,7 @@ namespace Nerdery\WordPress;
  *
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-class Proxy 
+class Proxy
 {
     /**
      * Get the WP global database connection
@@ -189,7 +189,7 @@ class Proxy
      */
     public function settingsFields($groupName)
     {
-        $result = $this->buffer(function() use ($groupName) {
+        $result = $this->buffer(function () use ($groupName) {
             settings_fields($groupName);
         });
 
@@ -207,7 +207,7 @@ class Proxy
      */
     public function doSettingsSections($groupName)
     {
-        $result = $this->buffer(function() use ($groupName) {
+        $result = $this->buffer(function () use ($groupName) {
             do_settings_sections($groupName);
         });
 
@@ -238,7 +238,7 @@ class Proxy
      *
      * @return void
      */
-    public function addSettingsSection($sectionId, $sectionTitle, callable $callback = null, $adminPageSlug)
+    public function addSettingsSection($sectionId, $sectionTitle, callable $callback = null, $adminPageSlug = null)
     {
         add_settings_section($sectionId, $sectionTitle, $callback, $adminPageSlug);
     }
@@ -385,7 +385,7 @@ class Proxy
             $type = 'update';
         }
 
-        return $this->addAction('admin_notices', function() use ($message, $type) {
+        return $this->addAction('admin_notices', function () use ($message, $type) {
             echo '<div class="' . $type . '">' . $message . '</div>';
         });
     }

@@ -45,9 +45,9 @@ class HydratorTest extends BaseTestCase
      */
     public function testConstruct()
     {
-        $this->_object = new Hydrator(array());
+        $this->object = new Hydrator(array());
 
-        $this->assertTrue($this->_object instanceof Hydrator);
+        $this->assertTrue($this->object instanceof Hydrator);
     }
 
     /**
@@ -61,10 +61,10 @@ class HydratorTest extends BaseTestCase
         $entity->b = 'm';
 
         $columnMap = array('a' => 'b');
-        $this->_object = new Hydrator($columnMap);
+        $this->object = new Hydrator($columnMap);
 
         // In order to verify this worked, we need to test a side-effect
-        $this->_object->hydrate($entity, array('a' => 'x'));
+        $this->object->hydrate($entity, array('a' => 'x'));
         $this->assertEquals('x', $entity->b);
     }
 
@@ -79,11 +79,11 @@ class HydratorTest extends BaseTestCase
         $entity->b = 'm';
 
         $columnMap = array('a' => 'b');
-        $this->_object = new Hydrator(array());
-        $this->_object->setColumnToPropertyMap($columnMap);
+        $this->object = new Hydrator(array());
+        $this->object->setColumnToPropertyMap($columnMap);
 
         // In order to verify this worked, we need to test a side-effect
-        $this->_object->hydrate($entity, array('a' => 'x'));
+        $this->object->hydrate($entity, array('a' => 'x'));
         $this->assertEquals('x', $entity->b);
     }
 
@@ -103,15 +103,15 @@ class HydratorTest extends BaseTestCase
             'age' => '100',
         );
 
-        $this->_object = new Hydrator(array());
-        $newEntity = $this->_object->hydrate($entity, $data);
+        $this->object = new Hydrator(array());
+        $newEntity = $this->object->hydrate($entity, $data);
 
         $this->assertEquals('Jean-Luc', $entity->name);
         $this->assertEquals('Captain', $entity->title);
         $this->assertEquals('Earl Grey', $entity->tea);
         $this->assertEquals('hot', $entity->temperature);
 
-        // Age is ignored during hydration because it doesn't exist on the 
+        // Age is ignored during hydration because it doesn't exist on the
         // entity
         $this->assertFalse(isset($entity->age));
 
@@ -133,8 +133,8 @@ class HydratorTest extends BaseTestCase
             'a' => 'b',
         );
 
-        $this->_object = new Hydrator(array());
-        $this->_object->hydrate($entity, $data);
+        $this->object = new Hydrator(array());
+        $this->object->hydrate($entity, $data);
     }
     
     /**
@@ -151,8 +151,8 @@ class HydratorTest extends BaseTestCase
             'a' => 'b',
         );
 
-        $this->_object = new Hydrator(array());
-        $this->_object->hydrate($entity, $data);
+        $this->object = new Hydrator(array());
+        $this->object->hydrate($entity, $data);
     }
 
     /**
@@ -166,13 +166,13 @@ class HydratorTest extends BaseTestCase
         $entity->setName('James');
         $entity->setTitle('Doctor');
 
-        $this->_object = new Hydrator(array());
+        $this->object = new Hydrator(array());
 
         $expected = array(
             'name' => 'James',
             'title' => 'Doctor',
         );
-        $data = $this->_object->dehydrate($entity);
+        $data = $this->object->dehydrate($entity);
         $this->assertEquals($expected, $data);
     }
 
@@ -183,21 +183,21 @@ class HydratorTest extends BaseTestCase
      */
     public function testGetPropertyUsingEntityWithGetter()
     {
-        // Note that I cannot mock this stub because the hydrator uses 
-        // reflection which results in incorrect data values during dehydration 
+        // Note that I cannot mock this stub because the hydrator uses
+        // reflection which results in incorrect data values during dehydration
         // (when mocking the objects)
         $entity = new StubEntityWithGetters();
         $entity->setName('yyyy');
         $entity->setTitle('zzzz');
 
-        $this->_object = new Hydrator(array());
+        $this->object = new Hydrator(array());
 
         $expected = array(
             'name' => 'yyyy',
             'title' => 'zzzz',
         );
 
-        $data = $this->_object->dehydrate($entity);
+        $data = $this->object->dehydrate($entity);
         $this->assertEquals($expected, $data);
     }
 
@@ -215,8 +215,8 @@ class HydratorTest extends BaseTestCase
             'title' => 'Tax Collector',
         );
 
-        $this->_object = new Hydrator(array());
-        $this->_object->hydrate($entity, $data);
+        $this->object = new Hydrator(array());
+        $this->object->hydrate($entity, $data);
 
         $this->assertEquals('Matthew', $entity->getName());
     }
@@ -239,8 +239,8 @@ class HydratorTest extends BaseTestCase
             'firstName' => 'name',
         );
 
-        $this->_object = new Hydrator($map);
-        $this->_object->hydrate($entity, $data);
+        $this->object = new Hydrator($map);
+        $this->object->hydrate($entity, $data);
 
         $this->assertEquals('Santa', $entity->getName());
     }

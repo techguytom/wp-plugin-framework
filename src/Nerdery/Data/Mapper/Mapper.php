@@ -146,4 +146,4 @@ abstract class Mapper implements MapperInterface
     {
         return $this->map[$column];
     }
-} 
+}

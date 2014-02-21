@@ -84,7 +84,7 @@ class Plugin extends Pimple
          *
          * @see http://codex.wordpress.org/Plugin_API/Action_Reference/admin_menu
          */
-        $proxy->addAction('admin_menu', function() use($plugin) {
+        $proxy->addAction('admin_menu', function () use ($plugin) {
             $plugin->registerAdminMenus();
         }, 1);
 
@@ -95,7 +95,7 @@ class Plugin extends Pimple
          *
          * @see http://codex.wordpress.org/Plugin_API/Action_Reference/shutdown
          */
-        $proxy->addAction('shutdown', function() use($plugin) {
+        $proxy->addAction('shutdown', function () use ($plugin) {
             $plugin->shutdown();
         }, 1);
 
@@ -347,7 +347,7 @@ class Plugin extends Pimple
          * and set an internal subscriber on the "init" hook to finish
          * initialization.
          */
-        $proxy->addAction('init', function() use($plugin) {
+        $proxy->addAction('init', function () use ($plugin) {
             $plugin->initialize();
         });
 
@@ -357,7 +357,7 @@ class Plugin extends Pimple
          *
          * @See http://codex.wordpress.org/Function_Reference/register_activation_hook
          */
-        $proxy->addAction("activate_{$pluginWpName}", function() use($plugin) {
+        $proxy->addAction("activate_{$pluginWpName}", function () use ($plugin) {
             $plugin->activate();
         });
 
@@ -367,7 +367,7 @@ class Plugin extends Pimple
          *
          * @see http://codex.wordpress.org/Function_Reference/register_activation_hook
          */
-        $proxy->addAction("deactivate_{$pluginWpName}", function() use($plugin) {
+        $proxy->addAction("deactivate_{$pluginWpName}", function () use ($plugin) {
             $plugin->deactivate();
         });
 

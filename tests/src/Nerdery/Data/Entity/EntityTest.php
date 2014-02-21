@@ -27,7 +27,7 @@ class EntityTest extends BaseTestCase
      */
     public function setUp()
     {
-        $this->_object = $this->getMockForAbstractClass('Nerdery\Data\Entity\Entity');
+        $this->object = $this->getMockForAbstractClass('Nerdery\Data\Entity\Entity');
     }
 
     /**
@@ -47,7 +47,7 @@ class EntityTest extends BaseTestCase
     public function testConstruct()
     {
 
-        $this->assertInstanceOf('Nerdery\Data\Entity\Entity', $this->_object);
+        $this->assertInstanceOf('Nerdery\Data\Entity\Entity', $this->object);
     }
 
     /**
@@ -57,7 +57,7 @@ class EntityTest extends BaseTestCase
      */
     public function testHasErrorsInitialState()
     {
-        $this->assertFalse($this->_object->hasErrors());
+        $this->assertFalse($this->object->hasErrors());
     }
 
     /**
@@ -67,9 +67,9 @@ class EntityTest extends BaseTestCase
      */
     public function testHasErrorsAfterAddingErrors()
     {
-        $this->_object->addError('Error #1');
+        $this->object->addError('Error #1');
 
-        $this->assertTrue($this->_object->hasErrors());
+        $this->assertTrue($this->object->hasErrors());
     }
 
     /**
@@ -79,7 +79,7 @@ class EntityTest extends BaseTestCase
      */
     public function testGetErrorsEmpty()
     {
-        $this->assertEquals(array(), $this->_object->getErrors());
+        $this->assertEquals(array(), $this->object->getErrors());
     }
 
     /**
@@ -89,13 +89,13 @@ class EntityTest extends BaseTestCase
      */
     public function testGetErrors()
     {
-        $this->_object->addError('Wrong');
+        $this->object->addError('Wrong');
 
         $expected = array(
             'Wrong',
         );
 
-        $this->assertEquals($expected, $this->_object->getErrors());
+        $this->assertEquals($expected, $this->object->getErrors());
     }
 
     /**
@@ -105,7 +105,7 @@ class EntityTest extends BaseTestCase
      */
     public function testIsValidEmpty()
     {
-        $this->assertTrue($this->_object->isValid());
+        $this->assertTrue($this->object->isValid());
     }
 
     /**
@@ -115,8 +115,8 @@ class EntityTest extends BaseTestCase
      */
     public function testIsValidAfterError()
     {
-        $this->_object->addError('Something went wrong');
+        $this->object->addError('Something went wrong');
 
-        $this->assertFalse($this->_object->isValid());
+        $this->assertFalse($this->object->isValid());
     }
 }

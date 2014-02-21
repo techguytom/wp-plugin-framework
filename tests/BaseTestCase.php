@@ -8,11 +8,6 @@
 namespace Nerdery\Tests;
 
 /**
- * @see PHPUnit/Framework/TestCase.php
- */
-require_once 'PHPUnit/Framework/TestCase.php';
-
-/**
  * Base Test Case
  * 
  * @uses PHPUnit_Framework_TestCase
@@ -28,5 +23,5 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      *
      * @var object
      */
-    protected $_object;
+    protected $object;
 }

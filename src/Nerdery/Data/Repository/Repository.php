@@ -338,4 +338,4 @@ abstract class Repository implements RepositoryInterface
 
         return $tableName;
     }
-} 
+}

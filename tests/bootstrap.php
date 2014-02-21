@@ -5,6 +5,11 @@
  * @package WpPluginFramework
  */
 
+/**
+ * @see PHPUnit/Framework/TestCase.php
+ */
+require_once 'PHPUnit/Framework/TestCase.php';
+
 require_once 'BaseTestCase.php';
 
 $root = realpath(dirname(dirname(__FILE__)));

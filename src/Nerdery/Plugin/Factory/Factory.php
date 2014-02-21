@@ -258,4 +258,4 @@ class Factory
 
         return $plugin;
     }
-} 
+}

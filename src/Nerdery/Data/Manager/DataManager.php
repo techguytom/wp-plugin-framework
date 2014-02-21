@@ -16,7 +16,7 @@ use Nerdery\WordPress\Gateway;
  * @package ClogCulprits\Data\Manager
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-class DataManager 
+class DataManager
 {
     /**
      * @var Hydrator
