@@ -14,6 +14,9 @@ namespace Nerdery\Plugin\Router;
  */
 class Route
 {
+    const ERROR_URL_MUST_BE_STRING = 'Url parameter must be a string.';
+    const ERROR_INVALID_HANDLER = 'Handler must be of the form controller_service_name:action_name';
+
     /**
      * Action name
      *
@@ -36,24 +39,23 @@ class Route
     private $url;
 
     /**
-     * Route string
-     *
-     * @var string
-     */
-    private $hook;
-
-    /**
      * Constructor
      *
      * @param string $url
-     * @param string $handler
+     * @param string $handler e.g.
      *
+     * @throws \InvalidArgumentException
      * @return Route
      */
-    public function __construct($url, $handler)
+    public function __construct($url = null, $handler = null)
     {
-        $this->setUrl($url);
-        $this->setHandler($handler);
+        if (!is_null($url)) {
+            $this->setUrl($url);
+        }
+
+        if (!is_null($handler)) {
+            $this->setHandler($handler);
+        }
     }
 
     /**
@@ -79,17 +81,26 @@ class Route
     /**
      * Set the handler
      *
-     * @param string $handler Ex: controller.foo:barAction
+     * @param string|callable $handler Ex: controller.foo:barAction
      *
+     * @throws \UnexpectedValueException
      * @throws \InvalidArgumentException
      * @return self
      */
     public function setHandler($handler)
     {
-        list($controller, $action) = explode(':', $handler);
+        if (false === is_string($handler)) {
+            throw new \InvalidArgumentException(self::ERROR_INVALID_HANDLER);
+        }
 
-        $this->controllerName = $controller;
-        $this->actionName = $action;
+        $handlerParts = explode(':', $handler);
+
+        if (count($handlerParts) < 2) {
+            throw new \InvalidArgumentException(self::ERROR_INVALID_HANDLER);
+        }
+
+        $this->controllerName = $handlerParts[0];
+        $this->actionName = $handlerParts[1];
 
         return $this;
     }
@@ -116,29 +127,5 @@ class Route
     public function getUrl()
     {
         return $this->url;
-    }
-
-    /**
-     * Set the hook
-     *
-     * @param string $hook
-     *
-     * @return self
-     */
-    public function setHook($hook)
-    {
-        $this->hook = $hook;
-
-        return $this;
-    }
-
-    /**
-     * Get the hook
-     *
-     * @return string
-     */
-    public function getHook()
-    {
-        return $this->hook;
     }
 }
