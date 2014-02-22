@@ -68,7 +68,7 @@ class DataManagerTest extends BaseTestCase
      */
     public function testConstructNoArgs()
     {
-        $this->setExpectedException('PHPUnit_Framework_Error', 'instance');
+        $this->setExpectedException('PHPUnit_Framework_Error', 'Argument 1 passed to');
         $this->object = new DataManager();
     }
 
@@ -79,7 +79,7 @@ class DataManagerTest extends BaseTestCase
      */
     public function testConstructIncorrectArgument()
     {
-        $this->setExpectedException('PHPUnit_Framework_Error', 'instance');
+        $this->setExpectedException('PHPUnit_Framework_Error', 'Argument 1 passed to');
         $gateway = new \StdClass();
 
         $this->object = new DataManager($gateway);
@@ -92,7 +92,7 @@ class DataManagerTest extends BaseTestCase
      */
     public function testConstructWithOnlyOneArgument()
     {
-        $this->setExpectedException('PHPUnit_Framework_Error', 'Hydrator');
+        $this->setExpectedException('PHPUnit_Framework_Error', 'Argument 2 passed to');
         $gateway = $this->getMockBuilder('Nerdery\WordPress\Gateway')
             ->disableOriginalConstructor()
             ->getMock();

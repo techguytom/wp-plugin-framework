@@ -122,11 +122,11 @@ class HydratorTest extends BaseTestCase
     /**
      * testValidatorWithEntityAsArray
      *
-     * @expectedException InvalidArgumentException must
      * @return void
      */
     public function testValidatorWithEntityAsArray()
     {
+        $this->setExpectedException('InvalidArgumentException', Hydrator::ERROR_ENTITY_NOT_OBJECT);
         $entity = array();
 
         $data = array(
@@ -140,11 +140,11 @@ class HydratorTest extends BaseTestCase
     /**
      * testValidatorWithEntityAsInt
      *
-     * @expectedException InvalidArgumentException must
      * @return void
      */
     public function testValidatorWithEntityAsInt()
     {
+        $this->setExpectedException('InvalidArgumentException', Hydrator::ERROR_ENTITY_NOT_OBJECT);
         $entity = 32;
 
         $data = array(
