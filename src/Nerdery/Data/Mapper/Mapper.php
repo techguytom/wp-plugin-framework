@@ -7,6 +7,9 @@
 
 namespace Nerdery\Data\Mapper;
 
+use InvalidArgumentException;
+use UnexpectedValueException;
+
 
 /**
  * Class Mapper
@@ -23,7 +26,12 @@ namespace Nerdery\Data\Mapper;
  */
 abstract class Mapper implements MapperInterface
 {
+    /**
+     * Constants
+     */
     const ERROR_EMPTY_MAP_ARRAY = 'Map array is not valid, map must not be an empty array.';
+    const ERROR_PROPERTY_NOT_SET = "Property '%s' does not exist in map.";
+    const ERROR_COLUMN_NOT_SET = "Column '%s' does not exist in map.";
 
     /**
      * Column-to-property map
@@ -45,12 +53,12 @@ abstract class Mapper implements MapperInterface
      *
      * @param array $map
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function __constructor(array $map)
+    public function __construct(array $map)
     {
         if (0 === count($map)) {
-            throw new \InvalidArgumentException(self::ERROR_EMPTY_MAP_ARRAY);
+            throw new InvalidArgumentException(self::ERROR_EMPTY_MAP_ARRAY);
         }
 
         $this->map = $map;
@@ -67,7 +75,7 @@ abstract class Mapper implements MapperInterface
     }
 
     /**
-     * Map an array of column keys to property keys
+     * Map an array of data indexed by column keys to property keys
      *
      * @param array $sourceArray
      *
@@ -79,7 +87,7 @@ abstract class Mapper implements MapperInterface
     }
 
     /**
-     * Map an array of property keys to column keys
+     * Map an array of data indexed by property keys to column keys
      *
      * @param array $sourceArray
      *
@@ -109,12 +117,17 @@ abstract class Mapper implements MapperInterface
     private function mapArray(array $sourceArray, array $map, $strict = false)
     {
         $outputArray = array();
+
         foreach ($sourceArray as $sourceKey => $sourceValue) {
+            // Whether to include this key in the output array
+            $includeKey = (true === $strict) ? false : true;
+
             if (array_key_exists($sourceKey, $map)) {
                 $outputArray[$map[$sourceKey]] = $sourceValue;
+                $includeKey = false;
             }
 
-            if (false === $strict) {
+            if ($includeKey) {
                 $outputArray[$sourceKey] = $sourceValue;
             }
         }
@@ -132,6 +145,11 @@ abstract class Mapper implements MapperInterface
     public function getColumnByProperty($property)
     {
         $map = array_flip($this->map);
+
+        if (!isset($map[$property])) {
+            throw new UnexpectedValueException(sprintf(self::ERROR_PROPERTY_NOT_SET, $property));
+        }
+
         return $map[$property];
     }
 
@@ -144,6 +162,10 @@ abstract class Mapper implements MapperInterface
      */
     public function getPropertyByColumn($column)
     {
+        if (!isset($this->map[$column])) {
+            throw new UnexpectedValueException(sprintf(self::ERROR_COLUMN_NOT_SET, $column));
+        }
+
         return $this->map[$column];
     }
 }
