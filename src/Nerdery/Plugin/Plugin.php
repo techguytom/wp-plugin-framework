@@ -177,10 +177,8 @@ class Plugin extends Pimple
     {
         $proxy = $this->getProxy();
         $pluginSlug = $this->getSlug();
-
         $proxy->doAction("{$pluginSlug}_deactivation");
-
-        flush_rewrite_rules(true);
+        $proxy->flushRewriteRules(true);
 
         return $this;
     }
@@ -196,7 +194,15 @@ class Plugin extends Pimple
      */
     public function shutdown()
     {
-        $this->getProxy()->flushRewriteRules(true);
+        $proxy = $this->getProxy();
+
+        /*
+         * This allows us to flush the WordPress url rewrite rules. WordPress
+         * stores these in it's database by default and they are *not* updated
+         * automatically when a new rewrite rule is registered, instead you
+         * have to do this.
+         */
+        $proxy->flushRewriteRules(true);
     }
 
     /**

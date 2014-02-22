@@ -58,6 +58,7 @@ class Table extends \WP_List_Table
     {
         $this->items = $data;
 
+        $this->items = $this->prepare_pagination($this->items);
         $this->prepare_items();
 
         return parent::__construct();
@@ -98,7 +99,6 @@ class Table extends \WP_List_Table
     public function prepare_items()
     {
         usort($this->items, array($this, 'sort_data'));
-        $this->items = $this->prepare_pagination($this->items);
         $this->_column_headers = array($this->columns, $this->hiddenColumns, $this->sortableColumns);
     }
 

@@ -84,8 +84,8 @@ class Router
             $router->inspectRequests();
         }, 0);
 
-        $wordPressProxy->addFilter('query_vars', function ($vars) use ($router) {
-            return $router->addQueryVars($vars);
+        $wordPressProxy->addFilter('query_vars', function ($queryVars) use ($router) {
+            return $router->addQueryVars($queryVars);
         });
 
         return $this;
@@ -120,11 +120,15 @@ class Router
     /**
      * Register endpoints
      *
+     * A major risk to registering these custom routes is
+     *
      * @throws \UnexpectedValueException
      * @return void
      */
     public function registerEndpoints()
     {
+
+
         // @todo Catch this upon activation.
         if (false === $this->permalinksEnabled()) {
             throw new \UnexpectedValueException(
