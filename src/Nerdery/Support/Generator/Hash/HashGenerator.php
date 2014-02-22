@@ -21,4 +21,4 @@ class HashGenerator implements GeneratorInterface
     {
         return crypt(microtime(), $salt);
     }
-} 
+}

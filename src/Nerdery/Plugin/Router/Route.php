@@ -12,7 +12,7 @@ namespace Nerdery\Plugin\Router;
  *
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-class Route 
+class Route
 {
     /**
      * Action name

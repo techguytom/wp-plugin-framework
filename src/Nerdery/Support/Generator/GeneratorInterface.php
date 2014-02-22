@@ -13,7 +13,7 @@ namespace Nerdery\Support\Generator;
  * @package Nerdery\Support\Generator
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-interface GeneratorInterface 
+interface GeneratorInterface
 {
     public function generate();
-} 
+}

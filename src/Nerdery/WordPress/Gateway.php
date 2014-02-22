@@ -266,11 +266,11 @@ class Gateway
         try {
             $result = $callable();
             mysql_query('COMMIT', $dbh);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             mysql_query('ROLLBACK', $dbh);
             throw new Exception('A database error has occurred resulting in a rolled back transaction.');
         }
 
         return $result;
     }
-} 
+}

@@ -40,7 +40,7 @@ class Hydrator
      *
      * @param array $columnToPropertyMap
      */
-    public function __constructor(array $columnToPropertyMap)
+    public function __construct(array $columnToPropertyMap)
     {
         $this->columnToPropertyMap = $columnToPropertyMap;
     }
@@ -91,8 +91,10 @@ class Hydrator
     public function dehydrate($entity)
     {
         $this->validateObject($entity);
+
         $dataArray = array();
         $reflectedEntity = new ReflectionClass($entity);
+
         $properties = $reflectedEntity->getProperties(\ReflectionProperty::IS_PRIVATE);
         foreach ($properties as $property) {
             $propertyName = $property->getName();
@@ -158,7 +160,7 @@ class Hydrator
 
         $reflectedProperty = new \ReflectionProperty($entity, $property);
         $reflectedProperty->setAccessible(true);
-        $reflectedProperty->setValue($value);
+        $reflectedProperty->setValue($entity, $value);
 
         return true;
     }
