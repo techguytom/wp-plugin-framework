@@ -88,7 +88,7 @@ class Proxy
      */
     public function addSubmenuPage($parentSlug, $pageTitle, $menuTitle, $capability, $menuSlug, $callable = null)
     {
-        add_submenu_page(
+        return add_submenu_page(
             $parentSlug,
             $pageTitle,
             $menuTitle,
@@ -129,10 +129,7 @@ class Proxy
     /**
      * doAction
      *
-     * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
-     *
      * @param string $actionName
-     *
      * @return null
      */
     public function doAction($actionName)
@@ -151,7 +148,7 @@ class Proxy
      */
     public function addRewriteRule($regex, $redirect, $after = 'top')
     {
-        add_rewrite_rule($regex, $redirect, $after);
+        return add_rewrite_rule($regex, $redirect, $after);
     }
 
     /**
@@ -175,7 +172,7 @@ class Proxy
      */
     public function flushRewriteRules($hardReset = true)
     {
-        flush_rewrite_rules($hardReset);
+        return flush_rewrite_rules($hardReset);
     }
 
     /**
@@ -236,11 +233,11 @@ class Proxy
      * @param callable $callback
      * @param string $adminPageSlug
      *
-     * @return void
+     * @return null
      */
     public function addSettingsSection($sectionId, $sectionTitle, $callback = null, $adminPageSlug = null)
     {
-        add_settings_section($sectionId, $sectionTitle, $callback, $adminPageSlug);
+        return add_settings_section($sectionId, $sectionTitle, $callback, $adminPageSlug);
     }
 
     /**
@@ -252,11 +249,11 @@ class Proxy
      * @param string $adminPageSlug
      * @param string $sectionId
      *
-     * @return void
+     * @return null
      */
     public function addSettingsField($settingId, $settingTitle, $callback, $adminPageSlug, $sectionId)
     {
-        add_settings_field($settingId, $settingTitle, $callback, $adminPageSlug, $sectionId);
+        return add_settings_field($settingId, $settingTitle, $callback, $adminPageSlug, $sectionId);
     }
 
     /**
@@ -269,8 +266,7 @@ class Proxy
      */
     public function addShortcode($tagName, $callback)
     {
-        add_shortcode($tagName, $callback);
-        return;
+        return add_shortcode($tagName, $callback);
     }
 
     /**
@@ -286,7 +282,7 @@ class Proxy
      */
     public function wpEnqueueScript($scriptName, $url = null, $dependencies = array(), $version = null, $inFooter = false)
     {
-        wp_enqueue_script($scriptName, $url, $dependencies, $version, $inFooter);
+        return wp_enqueue_script($scriptName, $url, $dependencies, $version, $inFooter);
     }
 
     /**
@@ -302,7 +298,7 @@ class Proxy
      */
     public function wpEnqueueStyle($scriptName, $url, $dependencies = array(), $version = null, $media = 'all')
     {
-        wp_enqueue_style($scriptName, $url, $dependencies, $version, $media);
+        return wp_enqueue_style($scriptName, $url, $dependencies, $version, $media);
     }
 
     /**
@@ -367,7 +363,10 @@ class Proxy
     public function redirect($toUrl, $status = 302)
     {
         wp_redirect($toUrl, $status);
-        exit;
+
+        if (!defined('PHPUNIT_WP_PLUGIN_FRAMEWORK_IN_TESTS')) {
+            exit;
+        }
     }
 
     /**
