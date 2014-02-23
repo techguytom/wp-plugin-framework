@@ -40,9 +40,11 @@ class Hydrator
      *
      * @param array $columnToPropertyMap
      */
-    public function __construct(array $columnToPropertyMap)
+    public function __construct(array $columnToPropertyMap = null)
     {
-        $this->columnToPropertyMap = $columnToPropertyMap;
+        if (null !== $columnToPropertyMap) {
+            $this->columnToPropertyMap = $columnToPropertyMap;
+        }
     }
 
     /**

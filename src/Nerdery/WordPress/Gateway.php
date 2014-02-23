@@ -22,6 +22,10 @@ class Gateway
      * Error constants
      */
     const ERROR_TABLE_PREFIX_NOT_STRING = 'Table prefix argument must be of type string.';
+    const ERROR_SQL_MUST_BE_STRING = '$sql must be a string.';
+    const TABLE_NAME_MUST_BE_A_STRING = 'Table name must be a string.';
+    const ERROR_MUST_BE_CALLABLE = 'Argument must be a callable.';
+    const ERROR_DB_ROLLBACK = 'A database error has occurred resulting in a rolled back transaction.';
 
     /**
      * @var wpdb
@@ -121,18 +125,22 @@ class Gateway
 
     /**
      * Prepare an SQL query
-     *
      * This will protect the query against SQL injection by leveraging
      * the WordPress DBAL functionality within it's "prepare()" method.
      *
      * @param string $sql
      * @param array $arguments
      *
+     * @throws \Exception
      * @return false|null|string
      */
     public function prepareQuery($sql, array $arguments)
     {
-        $arguments = $this->fixNull($arguments);
+        if (false === is_string($sql)) {
+            throw new \InvalidArgumentException(self::ERROR_SQL_MUST_BE_STRING);
+        }
+
+        $arguments = $this->cleanArguments($arguments);
         $wpdb = $this->getWpDbal();
         $result = $wpdb->prepare($sql, $arguments);
 
@@ -146,11 +154,16 @@ class Gateway
      * @param array $data
      * @param array $where
      *
+     * @throws \InvalidArgumentException
      * @return false|int
      */
     public function update($tableName, array $data, array $where)
     {
-        $data = $this->fixNull($data);
+        if (false === is_string($tableName)) {
+            throw new \InvalidArgumentException(self::TABLE_NAME_MUST_BE_A_STRING);
+        }
+
+        $data = $this->cleanArguments($data);
         $dbal = $this->getWpDbal();
         $result = $dbal->update($tableName, $data, $where);
 
@@ -163,11 +176,16 @@ class Gateway
      * @param string $tableName
      * @param array $data
      *
+     * @throws \InvalidArgumentException
      * @return false|int False on failure, ID of new row on insert
      */
     public function insert($tableName, array $data)
     {
-        $data = $this->fixNull($data);
+        if (false === is_string($tableName)) {
+            throw new \InvalidArgumentException(self::TABLE_NAME_MUST_BE_A_STRING);
+        }
+
+        $data = $this->cleanArguments($data);
         $dbal = $this->getWpDbal();
         $result = $dbal->insert($tableName, $data);
 
@@ -180,10 +198,15 @@ class Gateway
      * @param string $tableName
      * @param array $where
      *
+     * @throws \InvalidArgumentException
      * @return false|int
      */
     public function delete($tableName, array $where)
     {
+        if (false === is_string($tableName)) {
+            throw new \InvalidArgumentException(self::TABLE_NAME_MUST_BE_A_STRING);
+        }
+
         $dbal = $this->getWpDbal();
         $result = $dbal->delete($tableName, $where);
 
@@ -217,7 +240,8 @@ class Gateway
     }
 
     /**
-     * fixNull
+     * Fix WordPress NULL handling issue
+     *
      * This is a hack to fix a quirk with the WordPress DBAL. If you
      * pass in a NULL value for a column it will cast the NULL to a
      * string resulting in an empty string ("") which is not a valid
@@ -229,7 +253,7 @@ class Gateway
      *
      * @return array
      */
-    private function fixNull(array $arguments)
+    public function cleanArguments(array $arguments)
     {
         foreach ($arguments as $argumentKey => $argumentValue) {
             if (null === $argumentValue) {
@@ -246,6 +270,7 @@ class Gateway
 
     /**
      * Perform a database transaction
+     *
      * This allows us to perform transactions on our database, it does
      * however require that all tables be InnoDB (which may not be the case
      * especially with older installations of WordPress). Use this
@@ -258,17 +283,20 @@ class Gateway
      * @throws \Exception If transaction must be rolled back
      * @return mixed Returns the result of the callable
      */
-    public function transaction(callable $callable)
+    public function transaction($callable)
     {
-        $dbh = $this->getDbHandle();
-        mysql_query('START TRANSACTION', $dbh);
+        if (false === is_callable($callable)) {
+            throw new \InvalidArgumentException(self::ERROR_MUST_BE_CALLABLE);
+        }
+
+        $this->query('START TRANSACTION');
 
         try {
             $result = $callable();
-            mysql_query('COMMIT', $dbh);
+            $this->query('COMMIT');
         } catch (Exception $e) {
-            mysql_query('ROLLBACK', $dbh);
-            throw new Exception('A database error has occurred resulting in a rolled back transaction.');
+            $this->query('ROLLBACK');
+            throw new Exception(self::ERROR_DB_ROLLBACK);
         }
 
         return $result;
