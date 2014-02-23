@@ -128,7 +128,7 @@ class Plugin extends Pimple
          *
          * @see http://symfony.com/doc/current/components/http_foundation/session_php_bridge.html
          */
-        if (!session_id()) {
+        if (!session_id() && !defined('PHPUNIT_WP_PLUGIN_FRAMEWORK_IN_TESTS')) {
             session_start();
         }
 
@@ -294,7 +294,7 @@ class Plugin extends Pimple
      */
     public function getRequest()
     {
-        $request = $this['request'];
+        $request = $this[self::CONTAINER_KEY_REQUEST];
         return $request;
     }
 
@@ -310,7 +310,9 @@ class Plugin extends Pimple
     }
 
     /**
-     * {@inheritDoc}
+     * Alias to Pimple's offsetSet
+     *
+     * @return void
      */
     public function register($storeName, $resource)
     {
@@ -318,15 +320,13 @@ class Plugin extends Pimple
     }
 
     /**
-     * {@inheritDoc}
+     * Alias to Pimple's offsetGet
+     *
+     * @return mixed
      */
     public function get($storeName)
     {
-        if (!isset($this->$storeName)) {
-            return null;
-        }
-
-        return $this[$storeName];
+        return $this->offsetGet($storeName);
     }
 
     /**

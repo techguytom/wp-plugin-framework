@@ -5,6 +5,10 @@
  * @package WpPluginFramework
  */
 
+if (!defined('PHPUNIT_WP_PLUGIN_FRAMEWORK_IN_TESTS')) {
+    define('PHPUNIT_WP_PLUGIN_FRAMEWORK_IN_TESTS', true);
+}
+
 /**
  * @see PHPUnit/Framework/TestCase.php
  */
