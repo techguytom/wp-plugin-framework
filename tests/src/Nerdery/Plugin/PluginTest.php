@@ -2,10 +2,10 @@
 /**
  * Plugin Test File
  *
- * @package Nerdery\Tests\Plugin\Plugin
+ * @package Nerdery\Tests\Plugin
  */
 
-namespace Nerdery\Tests\Plugin\Plugin;
+namespace Nerdery\Tests\Plugin;
 
 use Nerdery\Tests\BaseTestCase;
 use Nerdery\Plugin\Plugin;
@@ -14,7 +14,7 @@ use Nerdery\Plugin\Plugin;
  * Plugin
  *
  * @uses BaseTestCase
- * @package Nerdery\Tests\Plugin\Plugin
+ * @package Nerdery\Tests\Plugin
  * @author Jansen Price <jansen.price@nerdery.com>
  * @version $Id$
  */

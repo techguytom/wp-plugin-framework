@@ -2,10 +2,10 @@
 /**
  * HashGenerator Test File
  *
- * @package Nerdery\Tests\Support\Generator\Hash\HashGenerator
+ * @package Nerdery\Tests\Support\Generator\Hash
  */
 
-namespace Nerdery\Tests\Support\Generator\Hash\HashGenerator;
+namespace Nerdery\Tests\Support\Generator\Hash;
 
 use Nerdery\Tests\BaseTestCase;
 use Nerdery\Support\Generator\Hash\HashGenerator;
@@ -14,7 +14,7 @@ use Nerdery\Support\Generator\Hash\HashGenerator;
  * HashGenerator
  *
  * @uses BaseTestCase
- * @package Nerdery\Tests\Support\Generator\Hash\HashGenerator
+ * @package Nerdery\Tests\Support\Generator\Hash
  * @author Jansen Price <jansen.price@nerdery.com>
  * @version $Id$
  */

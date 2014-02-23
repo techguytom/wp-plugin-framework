@@ -2,10 +2,11 @@
 /**
  * Proxy Test File
  *
- * @package Nerdery\Tests\WordPress\Proxy
+ * @package Nerdery\Tests\WordPress
  */
 
-namespace Nerdery\Tests\WordPress\Proxy {
+namespace Nerdery\Tests\WordPress
+{
 
 use Nerdery\Tests\BaseTestCase;
 use Nerdery\WordPress\Proxy;
@@ -14,7 +15,7 @@ use Nerdery\WordPress\Proxy;
  * Proxy
  *
  * @uses BaseTestCase
- * @package Nerdery\Tests\WordPress\Proxy
+ * @package Nerdery\Tests\WordPress
  * @author Jansen Price <jansen.price@nerdery.com>
  * @version $Id$
  */

@@ -2,8 +2,7 @@
 /**
  * File GatewayTest.php
  *
- * @package Nerdery\WordPress\Gateway
- * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
+ * @package Nerdery\Tests\WordPress
  */
 
 namespace Nerdery\Tests\WordPress;
@@ -14,7 +13,7 @@ use Nerdery\WordPress\Gateway;
 /**
  * Class GatewayTest
  *
- * @package Nerdery\WordPress\Gateway
+ * @package Nerdery\Tests\WordPress
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
 class GatewayTest extends \PHPUnit_Framework_TestCase

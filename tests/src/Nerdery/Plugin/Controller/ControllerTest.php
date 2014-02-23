@@ -2,9 +2,7 @@
 /**
  * File ControllerTest.php
  *
- * @uses
  * @package Nerdery\Tests\Plugin\Controller
- * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
 
 namespace Nerdery\Tests\Plugin\Controller;
