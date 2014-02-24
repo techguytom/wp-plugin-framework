@@ -73,7 +73,9 @@ class Plugin extends Pimple
          * buffer, this buffer does not have an accompanying flush, and thus
          * will flush when PHP shuts down.
          */
-        ob_start();
+        if (!defined('PHPUNIT_WP_PLUGIN_FRAMEWORK_IN_TESTS')) {
+            ob_start();
+        }
 
         $plugin = $this;
         $proxy = $this->getProxy();
