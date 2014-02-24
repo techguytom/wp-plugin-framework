@@ -47,7 +47,7 @@ class HashGeneratorTest extends BaseTestCase
     {
         $this->object = new HashGenerator();
 
-        $hash = $this->object->generate('a');
-        $this->assertContains('a$', $hash);
+        $hash = $this->object->generate('abc');
+        $this->assertContains('ab', $hash);
     }
 }
