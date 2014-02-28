@@ -1,7 +1,7 @@
 <?php
 /**
  * File Proxy.php
- * 
+ *
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
 
@@ -49,12 +49,13 @@ class Proxy
      *
      * @param string $actionName
      * @param array|callable $callback
+     * @param int $priority
      *
      * @return bool|void
      */
-    public function addAction($actionName, $callback)
+    public function addAction($actionName, $callback, $priority = 11)
     {
-        return add_action($actionName, $callback);
+        return add_action($actionName, $callback, $priority);
     }
 
     /**
