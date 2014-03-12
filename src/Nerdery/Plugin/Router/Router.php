@@ -1,7 +1,7 @@
 <?php
 /**
  * File Router.php
- * 
+ *
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
 
@@ -75,6 +75,11 @@ class Router
 
         $container = $this->getContainer();
         $wordPressProxy = $container->getProxy();
+        $pluginSlug = $container->getSlug();
+
+        $wordPressProxy->addAction("{$pluginSlug}_activation", function () use ($router) {
+            $router->activate();
+        });
 
         $wordPressProxy->addAction('init', function () use ($router) {
             $router->registerEndpoints();
@@ -127,9 +132,6 @@ class Router
      */
     public function registerEndpoints()
     {
-
-
-        // @todo Catch this upon activation.
         if (false === $this->permalinksEnabled()) {
             throw new \UnexpectedValueException(
                 'Permalinks must be enabled for rewrite rules to work.'
@@ -138,7 +140,6 @@ class Router
 
         /** @var Route $route */
         foreach ($this->getRoutes() as $route) {
-
             if (null === $route->getUrl()) {
                 continue;
             }
@@ -146,7 +147,59 @@ class Router
             $this->registerEndpoint($route);
         }
 
-        $this->getContainer()->getProxy()->flushRewriteRules(true);
+    }
+
+    /**
+     * Router Activation
+     *
+     * This is run when the plugin is activated
+     *
+     * @return void
+     */
+    public function activate()
+    {
+        $this->initRoutes();
+    }
+
+    /**
+     * initRoutes
+     *
+     * Runs when the plugin is activated, and creates url rewrites.
+     *
+     * @return void
+     */
+    public function initRoutes()
+    {
+        $container = $this->getContainer();
+        $proxy = $container->getProxy();
+
+        foreach ($this->getQueryVars() as $queryVar) {
+            add_rewrite_tag("%{$queryVar}%", '([^&]+)');
+        }
+
+        /** @var Route $route */
+        foreach ($this->getRoutes() as $route) {
+            if (null === $route->getUrl()) {
+                continue;
+            }
+
+            $slug = $container->getSlug();
+            $controllerName = $route->getControllerName();
+            $actionName = $route->getActionName();
+            $hookName = $this->generateHookName($controllerName, $actionName);
+
+            $toUrl = sprintf(
+                'index.php?%s=%s&%s=%s',
+                self::QUERY_PARAM_PLUGIN,
+                $slug,
+                self::QUERY_PARAM_ACTION,
+                $hookName
+            );
+
+            $proxy->addRewriteRule($route->getUrl(), $toUrl);
+        }
+
+        $proxy->flushRewriteRules(true);
     }
 
     /**
@@ -165,19 +218,9 @@ class Router
         $container = $this->getContainer();
         $slug = $container->getSlug();
         $proxy = $container->getProxy();
-        $hookName = $this->generateHookName();
         $controllerName = $route->getControllerName();
         $actionName = $route->getActionName();
-
-        $toUrl = sprintf(
-            'index.php?%s=%s&%s=%s',
-            self::QUERY_PARAM_PLUGIN,
-            $slug,
-            self::QUERY_PARAM_ACTION,
-            $hookName
-        );
-
-        $proxy->addRewriteRule($route->getUrl(), $toUrl);
+        $hookName = $this->generateHookName($controllerName, $actionName);
 
         $controller = $container[$controllerName];
 
@@ -210,11 +253,15 @@ class Router
     /**
      * Generate a random hook name
      *
+     * @param string $controllerName
+     * @param string $actionName
+     *
      * @return string
      */
-    private function generateHookName()
+    private function generateHookName($controllerName, $actionName)
     {
-        $hash = substr(md5(uniqid(null, true)), 0, 12);
+        $slug = $this->getContainer()->getSlug();
+        $hash = $slug . $controllerName . $actionName;
         return $hash;
     }
 
@@ -305,8 +352,19 @@ class Router
      */
     public function addQueryVars(array $vars)
     {
-        $vars[] = self::QUERY_PARAM_ACTION;
-        $vars[] = self::QUERY_PARAM_PLUGIN;
-        return $vars;
+        return array_merge($vars, $this->getQueryVars());
+    }
+
+    /**
+     * getQueryVars
+     *
+     * @return array
+     */
+    public function getQueryVars()
+    {
+        return array(
+            self::QUERY_PARAM_ACTION,
+            self::QUERY_PARAM_PLUGIN,
+        );
     }
 }

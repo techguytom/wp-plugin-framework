@@ -12,7 +12,7 @@ namespace Nerdery\WordPress;
  *
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
-class Proxy 
+class Proxy
 {
     /**
      * Get the WP global database connection
@@ -207,7 +207,7 @@ class Proxy
      */
     public function doSettingsSections($groupName)
     {
-        $result = $this->buffer(function() use ($groupName) {
+        $result = $this->buffer(function () use ($groupName) {
             do_settings_sections($groupName);
         });
 
