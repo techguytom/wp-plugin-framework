@@ -7,6 +7,7 @@
 
 namespace Nerdery\Plugin\Factory;
 
+use InvalidArgumentException;
 use Nerdery\Data\Manager\DataManager;
 use Nerdery\Data\Hydrator\Hydrator;
 use Nerdery\Plugin\Router\Router;
@@ -61,7 +62,17 @@ class Factory
     public function __construct(array $configurationArray)
     {
         $this->configuration = array_merge($this->configuration, $configurationArray);
-        $this->pluginFile = $this->getPluginFilename();
+        $this->pluginFile = $this->determinePluginFilename();
+    }
+
+    /**
+     * Get the plugin file name
+     *
+     * @return string
+     */
+    public function getPluginFilename()
+    {
+        return $this->pluginFile;
     }
 
     /**
@@ -74,14 +85,13 @@ class Factory
      *
      * @return string
      */
-    private function getPluginFilename()
+    private function determinePluginFilename()
     {
-
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
             // Second parameter added in PHP 5.4.0
-            $backtrace  = debug_backtrace(null, 2);
+            $backtrace = debug_backtrace(null, 2);
         } else {
-            $backtrace  = debug_backtrace(null);
+            $backtrace = debug_backtrace(null);
         }
 
         $file = $backtrace[1]['file'];
@@ -98,7 +108,7 @@ class Factory
     public function validate()
     {
         if (null === $this->configuration[self::CONFIG_KEY_TEMPLATE]) {
-            throw new \InvalidArgumentException(self::ERROR_REQUIRED_VIEW_TEMPLATE_PATH);
+            throw new InvalidArgumentException(self::ERROR_REQUIRED_VIEW_TEMPLATE_PATH);
         }
 
         return true;
@@ -117,7 +127,7 @@ class Factory
     public function registerDataServices(Plugin $plugin)
     {
         /*
-         * Regiser the data hydrator to the container, the data hydrator is
+         * Register the data hydrator to the container. The data hydrator is
          * a service class that allows us, with the aid of a data mapper
          * (custom per entity/repository) to persist business objects to a
          * database layer.
@@ -263,4 +273,4 @@ class Factory
 
         return $plugin;
     }
-} 
+}

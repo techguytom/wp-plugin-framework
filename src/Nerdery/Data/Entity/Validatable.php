@@ -44,4 +44,4 @@ interface Validatable
      * @return self
      */
     public function addError($message);
-} 
+}

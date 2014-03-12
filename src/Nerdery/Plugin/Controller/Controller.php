@@ -46,7 +46,7 @@ abstract class Controller implements ControllerInterface
          * Subscribe to the activation/deactivation hooks.
          * These must be here and *not* in the
          */
-        $proxy->addAction("{$slug}_activation", function () use($controller) {
+        $proxy->addAction("{$slug}_activation", function () use ($controller) {
             $controller->activate();
         });
 

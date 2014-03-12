@@ -29,6 +29,8 @@ abstract class Repository implements RepositoryInterface
      */
     const ERROR_SOURCE_NOT_SET = 'A valid data source must be defined using self::source()';
     const ERROR_ENTITY_NOT_OBJECT = 'Repository requires entity parameter to be an object.';
+    const ERROR_RESULTSET_NOT_ARRAYS = 'Result set must be an array of arrays.';
+    const ERROR_NO_PRIMARY_KEY_COLUMN_FOUND = 'No primary key is available on the entity %s using mapper %s.';
     const SQL_DATE_STAMP = 'Y-m-d H:i:s';
 
     /**
@@ -168,6 +170,12 @@ abstract class Repository implements RepositoryInterface
     public function hydrateResultSet(array $resultArray)
     {
         $result = array();
+
+        $firstRow = reset($resultArray);
+        if (!is_array($firstRow)) {
+            throw new UnexpectedValueException(self::ERROR_RESULTSET_NOT_ARRAYS);
+        }
+
         foreach ($resultArray as $row) {
             $result[] = $this->hydrate($row);
         }
@@ -205,7 +213,7 @@ abstract class Repository implements RepositoryInterface
     {
         if (false === $entity->isValid()) {
             $errors = implode('\r\n', $entity->getErrors());
-            throw new Exception($errors);
+            throw new UnexpectedValueException($errors);
         }
 
         $mapper = $this->getMapper();
@@ -215,22 +223,25 @@ abstract class Repository implements RepositoryInterface
         $tableName = $this->getSource();
 
         $primaryKeyName = $mapper->getPrimaryKeyPropertyName();
+
+        if (null === $primaryKeyName || trim($primaryKeyName) == '') {
+            throw new UnexpectedValueException(
+                sprintf(self::ERROR_NO_PRIMARY_KEY_COLUMN_FOUND, get_class($entity), get_class($mapper))
+            );
+        }
+
         $primaryKeyGetter = 'get' . ucfirst($primaryKeyName);
 
-        if (null !== $entity->$primaryKeyGetter()) {
+        $primaryKeyValue = $entity->$primaryKeyGetter();
+
+        if (null !== $primaryKeyValue) {
             $result = $this->update(
                 $tableName,
                 $dataArray,
-                array(
-                    $primaryKeyName => $dataArray[$primaryKeyName]
-                )
+                array($primaryKeyName => $primaryKeyValue)
             );
 
-            if (!$result) {
-                return $result;
-            }
-
-            return $entity;
+            return $result;
         }
 
         /*
@@ -246,20 +257,16 @@ abstract class Repository implements RepositoryInterface
 
         $gateway = $this->getGateway();
         $repository = $this;
-        $result = $gateway->transaction(function () use ($repository, $tableName, $dataArray) {
-            $result = $this->insert($tableName, $dataArray);
-            $id = $this->getGateway()->getWpDbal()->insert_id;
-            $returnArray = array(
-                'result' => $result,
-                'id' => $id,
-            );
 
-            return $returnArray;
-        });
+        $id = $gateway->transaction(
+            function () use ($repository, $tableName, $dataArray) {
+                return $repository->insert($tableName, $dataArray);
+            }
+        );
 
-        $entity->setId($result['id']);
+        $entity->setId($id);
 
-        return $result['result'];
+        return $id;
     }
 
     /**
@@ -270,7 +277,7 @@ abstract class Repository implements RepositoryInterface
      * @param array $where
      *
      * @throws \Exception
-     * @return false|int
+     * @return int Number of records affected
      */
     public function update($tableName, array $data, array $where)
     {
@@ -278,7 +285,7 @@ abstract class Repository implements RepositoryInterface
         $result = $gateway->update($tableName, $data, $where);
 
         if (false === $result) {
-            throw new Exception($gateway->getError());
+            throw new UnexpectedValueException($gateway->getError());
         }
 
         return $result;
@@ -291,7 +298,7 @@ abstract class Repository implements RepositoryInterface
      * @param array $data
      *
      * @throws \Exception If insert query operation fails.
-     * @return false|int
+     * @return int Id of inserted record
      */
     public function insert($tableName, array $data)
     {
@@ -299,7 +306,7 @@ abstract class Repository implements RepositoryInterface
         $result = $gateway->insert($tableName, $data);
 
         if (false === $result) {
-            throw new Exception($gateway->getError());
+            throw new UnexpectedValueException($gateway->getError());
         }
 
         return $result;
@@ -320,7 +327,7 @@ abstract class Repository implements RepositoryInterface
         $result = $gateway->delete($tableName, $where);
 
         if (false === $result) {
-            throw new Exception($gateway->getError());
+            throw new UnexpectedValueException($gateway->getError());
         }
 
         return $result;
@@ -338,4 +345,4 @@ abstract class Repository implements RepositoryInterface
 
         return $tableName;
     }
-} 
+}

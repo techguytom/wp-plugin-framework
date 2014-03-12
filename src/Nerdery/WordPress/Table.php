@@ -115,10 +115,10 @@ class Table extends \WP_List_Table
         $currentPage = $this->get_pagenum();
         $totalItems = count($data);
 
-        $this->set_pagination_args( array(
+        $this->set_pagination_args(array(
             'total_items' => $totalItems,
             'per_page'    => $perPage
-        ) );
+        ));
 
         $data = array_slice(
             $data,
@@ -180,7 +180,7 @@ class Table extends \WP_List_Table
             $order = $_GET['order'];
         }
 
-        $result = strcmp( $a[$orderby], $b[$orderby] );
+        $result = strcmp($a[$orderby], $b[$orderby]);
 
         if ($order === 'asc') {
             return $result;
@@ -214,7 +214,7 @@ class Table extends \WP_List_Table
      *
      * @return string
      */
-    function column_actions($item)
+    public function column_actions($item)
     {
         $callable = $this->actionCallable;
         return $callable($item);
@@ -225,7 +225,7 @@ class Table extends \WP_List_Table
      *
      * @param string $which top|bottom
      */
-    function extra_tablenav($which)
+    public function extra_tablenav($which)
     {
         if ($which === 'top') {
             echo $this->topTableNav;
