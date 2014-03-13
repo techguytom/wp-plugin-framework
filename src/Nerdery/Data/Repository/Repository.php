@@ -1,7 +1,7 @@
 <?php
 /**
  * File Repository.php
- * 
+ *
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  */
 
@@ -170,6 +170,10 @@ abstract class Repository implements RepositoryInterface
     public function hydrateResultSet(array $resultArray)
     {
         $result = array();
+
+        if (count($resultArray) < 1) {
+            return $result;
+        }
 
         $firstRow = reset($resultArray);
         if (!is_array($firstRow)) {
